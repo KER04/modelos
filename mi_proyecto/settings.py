@@ -29,6 +29,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
+
     
     'apps.autenticacion',
     'renta',
@@ -108,6 +110,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    
+      "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",  # <-- agrega esto
+    ],
 }
 
 SIMPLE_JWT = {
@@ -147,3 +154,9 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Si usas CSRF:
 CSRF_TRUSTED_ORIGINS = ["http://localhost:4200"]
+
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

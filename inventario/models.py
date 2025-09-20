@@ -1,4 +1,6 @@
 from django.db import models
+import os
+import uuid
 
 
 class TipoCategoria(models.Model):
@@ -41,13 +43,23 @@ class Prestamo(models.Model):
         return f"{self.pres_nombre} ({self.tipo_prestamo})"
     
 
+    
+def producto_foto_upload_to(instance, filename):
+    # carpeta por producto y nombre único, preservando extensión
+    ext = filename.split('.')[-1].lower()
+    filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join("productos", str(instance.prod_id or "tmp"), filename)
 
 
 class Producto(models.Model):
     prod_id = models.AutoField(primary_key=True)
     prod_nombre = models.CharField(max_length=45)
     prod_modelo = models.CharField(max_length=45, blank=True, null=True)
-    prod_foto = models.CharField(max_length=45, blank=True, null=True)
+    prod_foto = models.ImageField(
+        upload_to=producto_foto_upload_to,
+        blank=True,
+        null=True
+    )
     prod_valor_unitario = models.CharField(max_length=45)
     tipo_prestamos = models.CharField(max_length=45, blank=True, null=True)
     prod_estado = models.CharField(max_length=45, blank=True, null=True)
